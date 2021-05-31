@@ -1,0 +1,11 @@
+/.ipynb_checkpoints
+/__pycache__/
+/build
+/dist
+/trash
+/tests/.pytest_cache
+/tests/__pycache__/
+PDF_parser.exe
+PDF_parser.spec
+*.pdf
+*txt
