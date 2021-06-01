@@ -52,7 +52,7 @@ class SuperKeywordFinder:
         # split by comma
         words = []
         for line in txt_file:
-            word = re.split(',| ', line)
+            word = re.split(',| |-', line)
             words.append(word)
 
         # words formatting
