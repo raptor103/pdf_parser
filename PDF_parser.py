@@ -112,6 +112,8 @@ class SuperKeywordFinder:
         for y in additional_words:
             document_in_list_of_words.append(y)
 
+        # if any word has a hyphen - replace it
+        document_in_list_of_words = [z.replace("-", "") for z in document_in_list_of_words]
         return document_in_list_of_words
 
     def main(self):
