@@ -2,6 +2,7 @@ import itertools
 from pdfminer import high_level
 import os
 import re
+import sys
 
 
 class SuperKeywordFinder:
@@ -12,6 +13,11 @@ class SuperKeywordFinder:
 
     def __init__(self, file_with_keywords):
         self.file_with_keywords = file_with_keywords
+
+    def write_error_message_to_report(self, msg):
+        with open('Report.txt', 'a') as m:
+            m.write(msg)
+        sys.exit()
 
     def get_pdfs(self):
         """
@@ -24,7 +30,13 @@ class SuperKeywordFinder:
         for f in files:
             if '.pdf' in f:
                 pdfs.append(f)
-        assert len(pdfs) == len(set(pdfs)), "PDF names are not unique."  # check that names are unique
+
+        if len(pdfs) != len(set(pdfs)):  # check that names are unique
+            self.write_error_message_to_report("Names of PDFs are not unique. Please rename.")
+
+        if len(pdfs) == 0:  # No PDFs found
+            self.write_error_message_to_report("No PDFs found.")
+
         return pdfs
 
     def drop_diacritics(self, x):
@@ -47,6 +59,9 @@ class SuperKeywordFinder:
         Exctracts keywords from txt file
         Output - list of keywords
         """
+        # check if input file with keywords exists
+        if not os.path.isfile(self.file_with_keywords):
+            self.write_error_message_to_report("Missing file keywords.txt!")
         txt_file = open(self.file_with_keywords, encoding='utf8')
 
         # split by comma
@@ -127,9 +142,9 @@ class SuperKeywordFinder:
         """
         Main function for running whole logic
         """
+        self.delete_report_if_exists()
         pdfs = self.get_pdfs()
         keywords = self.get_list_of_key_words()
-        self.delete_report_if_exists()
 
         pdf_total_matches = {}  # save total count of matches for each pdf
         pdf_matches = {}  # for each pdf saves words and counts. example {pdf_name:{keyword1: 20, keyword2: 10}}
