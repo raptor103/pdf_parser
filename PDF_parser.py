@@ -96,6 +96,7 @@ class SuperKeywordFinder:
             Outputs newly created words
             """
             additional_concatenated_words = []
+            words_to_delete_from_concatenation = []
             for i in range(len(list_of_words)):
                 # if we are no in last word
                 if len(list_of_words) != (i + 1):
@@ -105,12 +106,18 @@ class SuperKeywordFinder:
                     if len(first_word) >= 2 and first_word[-1] == "-":
                         new_word = (first_word + second_word).replace("-", "")
                         additional_concatenated_words.append(new_word)
-            return additional_concatenated_words
+                        words_to_delete_from_concatenation.append(first_word)
+                        words_to_delete_from_concatenation.append(second_word)
+            return additional_concatenated_words, words_to_delete_from_concatenation
 
         # add newly created words (concatenated words from two lines) to all words from document
-        additional_words = concat_words_with_hyphen(document_in_list_of_words)
-        for y in additional_words:
+        (additional_concatenated_words,
+         words_to_delete_from_concatenation) = concat_words_with_hyphen(document_in_list_of_words)
+        for y in additional_concatenated_words:
             document_in_list_of_words.append(y)
+        # remove words from which concatenation was done
+        for h in words_to_delete_from_concatenation:
+            document_in_list_of_words.remove(h)
 
         # if any word has a hyphen - replace it
         document_in_list_of_words = [z.replace("-", "") for z in document_in_list_of_words]
