@@ -8,5 +8,6 @@
 /koš
 PDF_parser.exe
 PDF_parser.spec
+/.idea
 *.pdf
 *txt
